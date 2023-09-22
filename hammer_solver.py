@@ -122,6 +122,20 @@ def plot_sol_sys_in_motion(data: Dict[str, list],
 if __name__ == "__main__":
     from datetime import datetime, timedelta
 
+    time = input("Временной отрезок (с, мин, ч, дн): ")
+    time = time.split()
+    t = int(time[0])
+    days = t if time[-1] == "дн" else 0
+    hours = t if time[-1] == "ч" else 0
+    minutes = t if time[-1] == "мин" else 0
+    seconds = t if time[-1] == "с" else 0
+    t_step = input("Шаг по времени (с, мин, ч): ")
+    t_step = t_step.split()
+    dt = int(t_step[0])
+    dhours = dt if t_step[-1] == "ч" else 0
+    dminutes = dt if t_step[-1] == "мин" else 0
+    dseconds = dt if t_step[-1] == "с" else 0
+
     when1 = datetime.now()
     when2 = when1 + timedelta(hours=1)
     m = solsysd.planets_mass()
@@ -132,11 +146,13 @@ if __name__ == "__main__":
         plt.show()
     
     res = solve(
-        m,
-        r,
-        v,
-        timedelta(days=365).total_seconds(),
-        timedelta(minutes=5).total_seconds()
+        m, r, v,
+        timedelta(
+            days=days, hours=hours, minutes=minutes, seconds=seconds
+        ).total_seconds(),
+        timedelta(
+            hours=dhours, minutes=dminutes, seconds=dseconds
+        ).total_seconds()
     )
     with plt.style.context("fast"):
         plot_sol_sys_in_motion(res)
