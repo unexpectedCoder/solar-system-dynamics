@@ -119,6 +119,22 @@ def plot_sol_sys_in_motion(data: Dict[str, list],
     return fig, ax
 
 
+def plot_velo_time(data: Dict[str, list], figax=None):
+    if figax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig, ax = figax
+    t = np.array(data["t"]) / 3600.
+    v = np.array(data["v"])
+    v = lina.norm(v, axis=2) / 1000
+    names = solsysd.planets_name()
+    for i, name in enumerate(names):
+        ax.plot(t, v[:, i], label=name)
+    ax.set(xlabel="$t$, ч", ylabel="$v$, км/с")
+    ax.legend()
+    return fig, ax
+
+
 if __name__ == "__main__":
     from datetime import datetime, timedelta
 
@@ -156,4 +172,7 @@ if __name__ == "__main__":
     )
     with plt.style.context("fast"):
         plot_sol_sys_in_motion(res)
+        plt.show()
+    with plt.style.context("fast"):
+        plot_velo_time(res)
         plt.show()
